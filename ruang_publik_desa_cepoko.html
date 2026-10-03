@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Publik Desa Cepoko</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        ocean: {
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for chat and clean UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .chat-bubble-user {
+            background-color: #22c55e;
+            color: white;
+            border-radius: 16px 16px 2px 16px;
+        }
+        .chat-bubble-other {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            border-radius: 16px 16px 16px 2px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex flex-col md:flex-row antialiased">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 md:min-h-screen transition-all duration-300 z-30">
+        <div class="p-4 flex items-center justify-between md:justify-start border-b border-slate-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-ocean-500 flex items-center justify-center font-bold text-white shadow-lg">
+                    <i class="fa-solid font-bold text-xl fa-tree"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Desa Cepoko</h1>
+                    <p class="text-xs text-slate-400">Ruang Publik & Layanan</p>
+                </div>
+            </div>
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-white focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav id="nav-menu" class="hidden md:block p-4 space-y-1">
+            <button onclick="switchTab('beranda')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium bg-brand-600 text-white" data-tab="beranda">
+                <i class="fa-solid fa-house w-5 text-center"></i>
+                <span>Beranda</span>
+            </button>
+            <button onclick="switchTab('fasilitas')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white" data-tab="fasilitas">
+                <i class="fa-solid fa-building-flag w-5 text-center"></i>
+                <span>Fasilitas Publik</span>
+            </button>
+            <button onclick="switchTab('layanan')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white" data-tab="layanan">
+                <i class="fa-solid fa-hand-holding-hand w-5 text-center"></i>
+                <span>Layanan & Aduan</span>
+            </button>
+            <button onclick="switchTab('chat')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white relative" data-tab="chat">
+                <i class="fa-solid fa-comments w-5 text-center"></i>
+                <span class="flex-1">Chat Warga</span>
+                <span class="bg-brand-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">Aktif</span>
+            </button>
+            <button onclick="switchTab('agenda')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white" data-tab="agenda">
+                <i class="fa-solid fa-calendar-days w-5 text-center"></i>
+                <span>Agenda & Event</span>
+            </button>
+            <button onclick="switchTab('profil')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white" data-tab="profil">
+                <i class="fa-solid fa-circle-info w-5 text-center"></i>
+                <span>Profil Desa</span>
+            </button>
+
+            <!-- User Info Sidebar Banner -->
+            <div class="pt-6 border-t border-slate-800 mt-6">
+                <div class="bg-slate-800/60 rounded-xl p-3 flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-slate-700 text-brand-500 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="text-xs overflow-hidden">
+                        <p class="font-semibold text-slate-200 truncate" id="sidebar-user-name">Warga Cepoko</p>
+                        <p class="text-slate-400 text-[10px]">RT 02 / RW 01</p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+        
+        <!-- Header Bar -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+            <div>
+                <h2 id="page-title" class="text-xl font-bold text-slate-800">Beranda Ruang Publik</h2>
+                <p id="page-subtitle" class="text-xs text-slate-500">Selamat datang di Portal Digital Resmi Desa Cepoko</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="showNotificationToast('Belum ada notifikasi baru.')" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition relative">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-brand-500 rounded-full"></span>
+                </button>
+                <div class="h-6 w-px bg-slate-200"></div>
+                <span class="text-xs font-semibold px-3 py-1 bg-brand-100 text-brand-800 rounded-full flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                    Sistem Online
+                </span>
+            </div>
+        </header>
+
+        <!-- Content Container -->
+        <div class="p-4 sm:p-6 lg:p-8 flex-1">
+
+            <!-- TAB 1: BERANDA -->
+            <section id="tab-beranda" class="tab-content space-y-6">
+
+                <!-- Hero Welcome Banner -->
+                <div class="relative bg-gradient-to-r from-brand-800 to-brand-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl font-black pointer-events-none">
+                        CEPOKO
+                    </div>
+                    <div class="relative z-10 max-w-2xl">
+                        <span class="inline-block px-3 py-1 bg-brand-500/30 backdrop-blur-md rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Pemberdayaan Masyarakat</span>
+                        <h3 class="text-2xl sm:text-3xl font-bold mb-2">Selamat Datang di Ruang Publik Desa Cepoko</h3>
+                        <p class="text-brand-100 text-sm mb-6 leading-relaxed">
+                            Pusat pelayanan digital terpadu, peminjaman fasilitas desa, aduan kebersihan & infrastruktur, serta ruang silaturahmi antar warga secara transparan dan mudah.
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="switchTab('fasilitas')" class="px-4 py-2.5 bg-white text-brand-800 font-semibold text-sm rounded-xl hover:bg-brand-50 transition shadow">
+                                <i class="fa-solid fa-calendar-plus mr-1.5"></i> Pinjam Tempat
+                            </button>
+                            <button onclick="switchTab('layanan')" class="px-4 py-2.5 bg-brand-700/80 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl transition border border-brand-500/30">
+                                <i class="fa-solid fa-bullhorn mr-1.5"></i> Buat Laporan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency & Quick Access Grid -->
+                <div>
+                    <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Akses Cepat & Layanan Darurat</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <a href="tel:081234567890" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex items-center space-x-3 group">
+                            <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fa-solid fa-phone-volume text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Ambulan / Darurat</p>
+                                <p class="font-bold text-slate-800 text-sm">0822-2564-5202</p>
+                            </div>
+                        </a>
+                        <a href="tel:081298765432" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex items-center space-x-3 group">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fa-solid fa-shield-halved text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Babinsa / Linmas</p>
+                                <p class="font-bold text-slate-800 text-sm">0813-5354-2157</p>
+                            </div>
+                        </a>
+                        <button onclick="switchTab('layanan')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex items-center space-x-3 text-left group">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fa-solid fa-file-signature text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Administrasi</p>
+                                <p class="font-bold text-slate-800 text-sm">Surat Pengantar</p>
+                            </div>
+                        </button>
+                        <button onclick="switchTab('chat')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex items-center space-x-3 text-left group">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fa-solid fa-comments text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Diskusi Warga</p>
+                                <p class="font-bold text-slate-800 text-sm">Grup Chat RT/RW</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Grid: Announcements & Today's Schedule -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left Column: Announcements (2 Cols) -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-slate-800 text-base">Pengumuman & Berita Desa</h4>
+                            <span class="text-xs text-brand-600 font-semibold">Terbaru</span>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition">
+                            <div class="flex items-center space-x-2 text-xs text-slate-400 mb-2">
+                                <span class="bg-brand-100 text-brand-700 font-medium px-2.5 py-0.5 rounded-md">Kegiatan</span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-clock mr-1"></i> Hari ini, 09:00 WIB</span>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-lg mb-2">Pemberbersihan Got & Kerja Bakti Masif Sambut Musim Hujan</h5>
+                            <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                                Dihimbau kepada seluruh warga RT 01 - RT 05 RW 01 Desa Cepoko untuk mengikuti agenda kerja bakti pembersihan saluran air lingkungan mulai besok pagi.
+                            </p>
+                            <div class="flex items-center justify-between text-xs pt-3 border-t border-slate-100">
+                                <span class="text-slate-500 font-medium"><i class="fa-solid fa-user-tie mr-1"></i> Pengurus RW 01</span>
+                                <button onclick="switchTab('agenda')" class="text-brand-600 hover:text-brand-700 font-semibold flex items-center gap-1">
+                                    Lihat Detail <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition">
+                            <div class="flex items-center space-x-2 text-xs text-slate-400 mb-2">
+                                <span class="bg-blue-100 text-blue-700 font-medium px-2.5 py-0.5 rounded-md">Pengumuman</span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-clock mr-1"></i> Kemarin</span>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-lg mb-2">Jadwal Operasional Perpustakaan Desa Cepoko Selama Akhir Pekan</h5>
+                            <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                                Selama libur sekolah, Ruang Baca & Perpustakaan Desa Cepoko akan buka hingga pukul 17:00 WIB. Dilengkapi akses Wi-Fi gratis untuk belajar anak-anak.
+                            </p>
+                            <div class="flex items-center justify-between text-xs pt-3 border-t border-slate-100">
+                                <span class="text-slate-500 font-medium"><i class="fa-solid fa-user-tie mr-1"></i> Pengelola Perpustakaan</span>
+                                <button onclick="switchTab('fasilitas')" class="text-brand-600 hover:text-brand-700 font-semibold flex items-center gap-1">
+                                    Info Fasilitas <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Today's Schedule -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 text-base">Agenda Ruang Publik Hari Ini</h4>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                            
+                            <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <div class="bg-brand-500 text-white p-2 rounded-lg text-center min-w-[50px]">
+                                    <span class="block text-xs uppercase font-bold">15:00</span>
+                                    <span class="block text-[10px] text-brand-100">WIB</span>
+                                </div>
+                                <div>
+                                    <h6 class="font-semibold text-slate-800 text-sm">Latihan Voli Remaja</h6>
+                                    <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-red-500"></i> Lapangan Serbaguna</p>
+                                    <span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-medium px-2 py-0.5 rounded">Berlangsung</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <div class="bg-blue-500 text-white p-2 rounded-lg text-center min-w-[50px]">
+                                    <span class="block text-xs uppercase font-bold">19:30</span>
+                                    <span class="block text-[10px] text-blue-100">WIB</span>
+                                </div>
+                                <div>
+                                    <h6 class="font-semibold text-slate-800 text-sm">Rapat Karang Taruna</h6>
+                                    <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-red-500"></i> Ruang Rapat Balai Desa</p>
+                                    <span class="inline-block mt-1 text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded">Mendatang</span>
+                                </div>
+                            </div>
+
+                            <button onclick="switchTab('agenda')" class="w-full text-center text-xs font-semibold text-brand-600 hover:text-brand-700 py-2 bg-brand-50 rounded-xl transition">
+                                lihat Selengkapnya Kalender Acara
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 2: FASILITAS & RUANG PUBLIK -->
+            <section id="tab-fasilitas" class="tab-content hidden space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Katalog Fasilitas Publik</h3>
+                        <p class="text-slate-500 text-xs">Pilih tempat atau fasilitas publik untuk melihat ketersediaan dan mengajukan pinjam tempat.</p>
+                    </div>
+                    <button onclick="openBookingModal()" class="px-4 py-2.5 bg-brand-600 text-white text-sm font-semibold rounded-xl hover:bg-brand-700 transition shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Form Ajukan Peminjaman
+                    </button>
+                </div>
+
+                <!-- Facilities Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="facility-cards-container">
+                    <!-- Cards dynamically populated / hardcoded initial -->
+                </div>
+            </section>
+
+            <!-- TAB 3: LAYANAN & PELAPORAN WARGA -->
+            <section id="tab-layanan" class="tab-content hidden space-y-6">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left: Report Form -->
+                    <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn text-brand-600"></i> Buat Aduan / Laporan
+                        </h3>
+                        <p class="text-xs text-slate-500">Laporkan masalah fasilitas rusak, kebersihan, atau usulan di wilayah Desa Cepoko.</p>
+
+                        <form id="report-form" onsubmit="handleReportSubmit(event)" class="space-y-4 pt-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Pelapor</label>
+                                <input type="text" id="report-name" required placeholder="Masukkan nama Anda" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Kategori Masalah</label>
+                                <select id="report-category" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                    <option value="Fasilitas Rusak">Fasilitas Rusak</option>
+                                    <option value="Kebersihan & Sampah">Kebersihan & Sampah</option>
+                                    <option value="Lampu Jalan / Penerangan">Lampu Jalan / Penerangan</option>
+                                    <option value="Administrasi / Surat">Pengajuan Surat Administrasi</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Lokasi Detail</label>
+                                <input type="text" id="report-location" required placeholder="Contoh: Depan Lapangan RT 03" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Laporan</label>
+                                <textarea id="report-description" rows="3" required placeholder="Jelaskan detail laporan..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow transition">
+                                Kirim Laporan Warga
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Reports Status List -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800 text-base">Daftar Status Aduan Warga</h3>
+                            <span class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-medium" id="report-count">3 Laporan</span>
+                        </div>
+
+                        <!-- Interactive Report Cards Container -->
+                        <div id="reports-list-container" class="space-y-3">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 4: FORUM & CHAT GRUP WARGA -->
+            <section id="tab-chat" class="tab-content hidden space-y-4">
+                
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col md:flex-row min-h-[580px] h-[calc(100vh-180px)]">
+                    
+                    <!-- Chat Room Sidebar -->
+                    <div class="w-full md:w-72 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
+                        <div class="p-4 border-b border-slate-200">
+                            <h4 class="font-bold text-slate-800 text-sm">Saluran Chat Warga</h4>
+                            <p class="text-slate-500 text-[11px]">Pilih grup untuk memulai diskusi</p>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-2 space-y-1" id="chat-channels-list">
+                            <!-- Channels injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Active Chat Area -->
+                    <div class="flex-1 flex flex-col bg-slate-100/50">
+                        <!-- Chat Header -->
+                        <div class="p-4 bg-white border-b border-slate-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-lg" id="chat-active-icon">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm" id="chat-active-title">Forum Umum Desa Cepoko</h4>
+                                    <p class="text-slate-400 text-xs" id="chat-active-members">245 Anggota Terhubung</p>
+                                </div>
+                            </div>
+                            <button onclick="showNotificationToast('Fitur pencarian dalam grup aktif')" class="text-slate-400 hover:text-slate-600 p-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+
+                        <!-- Chat Messages Container -->
+                        <div class="flex-1 overflow-y-auto p-4 space-y-3" id="chat-messages-container">
+                            <!-- Messages dynamically loaded based on active channel -->
+                        </div>
+
+                        <!-- Message Input Form -->
+                        <div class="p-3 bg-white border-t border-slate-200">
+                            <form onsubmit="handleSendMessage(event)" class="flex items-center space-x-2">
+                                <input type="text" id="chat-input" placeholder="Tulis pesan warga..." required class="flex-1 text-sm px-4 py-2.5 rounded-full border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <button type="submit" class="w-10 h-10 bg-brand-600 text-white rounded-full flex items-center justify-center hover:bg-brand-700 transition shadow">
+                                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 5: AGENDA & KEGIATAN DESA -->
+            <section id="tab-agenda" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Kalender & Agenda Desa</h3>
+                        <p class="text-xs text-slate-500">Ikuti berbagai kegiatan sosial, olahraga, dan pemberdayaan masyarakat di Desa Cepoko.</p>
+                    </div>
+                </div>
+
+                <!-- Event Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-container">
+                    <!-- Dynamic Events Cards -->
+                </div>
+            </section>
+
+            <!-- TAB 6: PROFIL & INFORMASI DESA -->
+            <section id="tab-profil" class="tab-content hidden space-y-6">
+                
+                <!-- Village Banner Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-600 to-ocean-600 flex items-center justify-center text-white text-4xl shadow-lg flex-shrink-0">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Profil Desa Cepoko</h3>
+                            <p class="text-slate-500 text-sm mt-1 leading-relaxed">
+                                Desa Cepoko adalah desa terpadu yang bertekad mengedepankan pelayanan publik modern berbasis keterbukaan, gotong royong, serta penguatan sarana ruang publik yang nyaman untuk warga.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organization Structure -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h4 class="font-bold text-slate-800 text-base border-b border-slate-100 pb-3">Struktur Perangkat Desa</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-700 mx-auto flex items-center justify-center font-bold mb-2">
+                                <i class="fa-solid fa-user-tie text-xl"></i>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-sm">Ngadiman</h5>
+                            <p class="text-xs text-brand-600 font-medium">Kepala Desa</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-700 mx-auto flex items-center justify-center font-bold mb-2">
+                                <i class="fa-solid fa-user-check text-xl"></i>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-sm">Daris</h5>
+                            <p class="text-xs text-blue-600 font-medium">Sekretaris Desa</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-700 mx-auto flex items-center justify-center font-bold mb-2">
+                                <i class="fa-solid fa-coins text-xl"></i>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-sm">Karis</h5>
+                            <p class="text-xs text-amber-600 font-medium">Kaur Keuangan</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-700 mx-auto flex items-center justify-center font-bold mb-2">
+                                <i class="fa-solid fa-people-roof text-xl"></i>
+                            </div>
+                            <h5 class="font-bold text-slate-800 text-sm">Hidayah</h5>
+                            <p class="text-xs text-purple-600 font-medium">Kasi Pelayanan & Publik</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operating Hours & Office Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-brand-600"></i> Jam Operasional Layanan
+                        </h4>
+                        <ul class="text-sm space-y-2 text-slate-600">
+                            <li class="flex justify-between py-1 border-b border-slate-100">
+                                <span>Senin - Kamis</span>
+                                <span class="font-semibold text-slate-800">08:00 - 15:00 WIB</span>
+                            </li>
+                            <li class="flex justify-between py-1 border-b border-slate-100">
+                                <span>Jumat</span>
+                                <span class="font-semibold text-slate-800">08:00 - 11:30 WIB</span>
+                            </li>
+                            <li class="flex justify-between py-1">
+                                <span>Sabtu - Minggu</span>
+                                <span class="text-red-500 font-semibold">Tutup (Khusus Peminjaman Otomatis)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-brand-600"></i> Alamat Sekretariat
+                        </h4>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            cepoko, sumberlawang, sragen, jawa tengah
+                        </p>
+                        <p class="text-xs text-slate-400">
+                            Email: pelayanan@desacepoko.id | Telp: 0822-2125-6627
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h4 class="font-bold text-slate-800 text-lg">Form Pinjam Tempat / Fasilitas</h4>
+                <button onclick="closeBookingModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Fasilitas</label>
+                    <select id="booking-facility-select" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <!-- Options generated JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Pemohon / Organisasi</label>
+                    <input type="text" id="booking-applicant" required placeholder="Contoh: Pak RT / Komunitas Pemuda" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal</label>
+                        <input type="date" id="booking-date" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Waktu</label>
+                        <input type="time" id="booking-time" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Keperluan Kegiatan</label>
+                    <textarea id="booking-purpose" rows="2" required placeholder="Jelaskan jenis kegiatan..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="pt-3 flex justify-end space-x-3">
+                    <button type="button" onclick="closeBookingModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl transition">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl transition shadow">Kirim Permohonan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast Box -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0 z-50 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand-400 text-lg"></i>
+        <span id="toast-message" class="text-sm font-medium">Notifikasi</span>
+    </div>
+
+    <script>
+        // DATA STORES
+        const state = {
+            activeTab: 'beranda',
+            facilities: [
+                {
+                    id: 1,
+                    name: 'Balai Desa Utama',
+                    category: 'Gedung Serbaguna',
+                    capacity: '200 Orang',
+                    status: 'Tersedia',
+                    image: 'fa-building-columns',
+                    desc: 'Dapat digunakan untuk musyawarah warga, pernikahan, dan acara formal.'
+                },
+                {
+                    id: 2,
+                    name: 'Lapangan Olahraga Desa',
+                    category: 'Sarana Olahraga',
+                    capacity: '100+ Orang',
+                    status: 'Dipakai',
+                    image: 'fa-volleyball',
+                    desc: 'Lapangan voli & futsal outdoor terlindung dengan fasilitas pencahayaan malam.'
+                },
+                {
+                    id: 3,
+                    name: 'Taman Publik & Gazebo Cepoko',
+                    category: 'Ruang Terbuka Hijau',
+                    capacity: '50 Orang',
+                    status: 'Tersedia',
+                    image: 'fa-tree',
+                    desc: 'Taman ramah anak dilengkapi tempat duduk santai dan area gazebo.'
+                },
+                {
+                    id: 4,
+                    name: 'Perpustakaan & Ruang Baca',
+                    category: 'Edukasi Warga',
+                    capacity: '30 Orang',
+                    status: 'Tersedia',
+                    image: 'fa-book-open-reader',
+                    desc: 'Dilengkapi koleksi buku komplit dan koneksi internet cepat untuk pelajar.'
+                }
+            ],
+            reports: [
+                {
+                    id: 'ADU-001',
+                    name: 'Budi Raharjo',
+                    category: 'Lampu Jalan / Penerangan',
+                    location: 'RT 02 RW 01',
+                    desc: 'Lampu jalan dekat pos ronda padam sejak kemarin malam.',
+                    status: 'Diproses',
+                    date: 'Hari ini, 08:30 WIB'
+                },
+                {
+                    id: 'ADU-002',
+                    name: 'Siti Aminah',
+                    category: 'Kebersihan & Sampah',
+                    location: 'Taman Desa',
+                    desc: 'Tempat sampah di area bermain anak sudah penuh perlu diangkut.',
+                    status: 'Selesai',
+                    date: 'Kemarin'
+                }
+            ],
+            chatChannels: [
+                { id: 'umum', name: 'Forum Umum Cepoko', icon: 'fa-comments', members: 245 },
+                { id: 'rt01', name: 'Grup Warga RT 01 / RW 01', icon: 'fa-house-user', members: 42 },
+                { id: 'rt02', name: 'Grup Warga RT 02 / RW 01', icon: 'fa-house-user', members: 38 },
+                { id: 'karangtaruna', name: 'Karang Taruna Tunas Muda', icon: 'fa-users', members: 65 },
+                { id: 'pkk', name: 'Ibu-Ibu PKK Desa', icon: 'fa-heart', members: 89 }
+            ],
+            activeChannelId: 'umum',
+            messages: {
+                umum: [
+                    { sender: 'Pak RT 01', text: 'Selamat pagi Bapak/Ibu sekalian. Pengingat untuk giat kerja bakti minggu besok ya.', time: '07:45' },
+                    { sender: 'Ibu Hani', text: 'Siap Pak RT, nanti konsumsi disiapkan tim PKK.', time: '08:02' }
+                ],
+                rt01: [
+                    { sender: 'Rudi', text: 'Halo tetangga RT 01, ada yang lihat kunci pagar saya?', time: 'Yesterday' }
+                ],
+                rt02: [
+                    { sender: 'Pak Bambang', text: 'Iuran kebersihan bulan ini bisa disetor lewat Bendahara ya.', time: '09:00' }
+                ],
+                karangtaruna: [
+                    { sender: 'Dimas', text: 'Jadwal persiapan turnamen bola minggu depan jam berapa rekan-rekan?', time: '10:15' }
+                ],
+                pkk: [
+                    { sender: 'Ibu Rina', text: 'Jangan lupa acara posyandu balita besok pagi di Balai Desa.', time: '08:30' }
+                ]
+            },
+            events: [
+                {
+                    id: 1,
+                    title: 'Turnamen Bulutangkis Antar RT',
+                    date: '15 Oktober 2026',
+                    time: '18:30 WIB - Selesai',
+                    location: 'Balai Desa Cepoko',
+                    registered: 12
+                },
+                {
+                    id: 2,
+                    title: 'Pelatihan Usaha UMKM Warga Desa',
+                    date: '20 Oktober 2026',
+                    time: '09:00 WIB',
+                    location: 'Ruang Rapat Balai Desa',
+                    registered: 28
+                },
+                {
+                    id: 3,
+                    title: 'Pemeriksaan Kesehatan Gratis Posyandu Lansia',
+                    date: '25 Oktober 2026',
+                    time: '08:00 WIB',
+                    location: 'Gazebo Taman Desa',
+                    registered: 45
+                }
+            ]
+        };
+
+        // DOM READY INITIALIZATION
+        window.onload = function() {
+            renderFacilities();
+            renderReports();
+            renderChatChannels();
+            renderChatMessages();
+            renderEvents();
+
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                const nav = document.getElementById('nav-menu');
+                nav.classList.toggle('hidden');
+            });
+        };
+
+        // TAB NAVIGATION LOGIC
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show active tab
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            // Update tab button styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium bg-brand-600 text-white';
+                } else {
+                    btn.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-left text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white';
+                }
+            });
+
+            // Update Header Title
+            const titles = {
+                beranda: ['Beranda Ruang Publik', 'Selamat datang di Portal Digital Resmi Desa Cepoko'],
+                fasilitas: ['Katalog Fasilitas Publik', 'Informasi ketersediaan dan form pinjam sarana desa'],
+                layanan: ['Layanan & Pelaporan Warga', 'Sampaikan masukan, aduan, atau permohonan surat'],
+                chat: ['Forum & Chat Grup Warga', 'Ruang komunikasi aktif antar tetangga dan pengurus desa'],
+                agenda: ['Agenda & Kegiatan Desa', 'Jadwal acara kebersamaan dan pemberdayaan masyarakat'],
+                profil: ['Profil Desa Cepoko', 'Informasi perangkat desa dan jam operasional layanan']
+            };
+
+            document.getElementById('page-title').innerText = titles[tabId][0];
+            document.getElementById('page-subtitle').innerText = titles[tabId][1];
+
+            // Close mobile menu on click
+            if (window.innerWidth < 768) {
+                document.getElementById('nav-menu').classList.add('hidden');
+            }
+        }
+
+        // RENDER FACILITIES
+        function renderFacilities() {
+            const container = document.getElementById('facility-cards-container');
+            const select = document.getElementById('booking-facility-select');
+            
+            container.innerHTML = '';
+            select.innerHTML = '';
+
+            state.facilities.forEach(item => {
+                const isAvailable = item.status === 'Tersedia';
+                const statusBadge = isAvailable
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i> ${item.status}</span>`
+                    : `<span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full"><i class="fa-solid fa-clock mr-1"></i> ${item.status}</span>`;
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between hover:shadow-md transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid ${item.image}"></i>
+                                </div>
+                                ${statusBadge}
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1">${item.name}</h4>
+                            <p class="text-xs text-brand-600 font-medium mb-2">${item.category} • Kapasitas: ${item.capacity}</p>
+                            <p class="text-slate-600 text-xs leading-relaxed mb-4">${item.desc}</p>
+                        </div>
+                        <button onclick="openBookingModal(${item.id})" class="w-full py-2 bg-slate-100 hover:bg-brand-600 hover:text-white text-slate-700 font-semibold text-xs rounded-xl transition">
+                            Ajukan Pinjam Tempat
+                        </button>
+                    </div>
+                `;
+
+                select.innerHTML += `<option value="${item.name}">${item.name} (${item.status})</option>`;
+            });
+        }
+
+        // RENDER REPORTS
+        function renderReports() {
+            const container = document.getElementById('reports-list-container');
+            document.getElementById('report-count').innerText = `${state.reports.length} Laporan`;
+            container.innerHTML = '';
+
+            state.reports.forEach(rep => {
+                const isDone = rep.status === 'Selesai';
+                const badge = isDone 
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold"><i class="fa-solid fa-check mr-1"></i> Selesai</span>`
+                    : `<span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold"><i class="fa-solid fa-spinner animate-spin mr-1"></i> Diproses</span>`;
+
+                container.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-slate-800 text-sm">${rep.id}</span>
+                                <span class="text-xs text-slate-400">• ${rep.date}</span>
+                            </div>
+                            ${badge}
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">${rep.category} @ ${rep.location}</p>
+                        <p class="text-slate-600 text-xs">${rep.desc}</p>
+                        <p class="text-[10px] text-slate-400">Pelapor: ${rep.name}</p>
+                    </div>
+                `;
+            });
+        }
+
+        // REPORT SUBMISSION
+        function handleReportSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('report-name').value;
+            const category = document.getElementById('report-category').value;
+            const location = document.getElementById('report-location').value;
+            const desc = document.getElementById('report-description').value;
+
+            const newReport = {
+                id: `ADU-00${state.reports.length + 1}`,
+                name: name,
+                category: category,
+                location: location,
+                desc: desc,
+                status: 'Diproses',
+                date: 'Baru saja'
+            };
+
+            state.reports.unshift(newReport);
+            renderReports();
+            document.getElementById('report-form').reset();
+            showNotificationToast('Laporan berhasil terkirim dan tercatat!');
+        }
+
+        // BOOKING MODAL LOGIC
+        function openBookingModal(facilityId = null) {
+            if (facilityId) {
+                const fac = state.facilities.find(f => f.id === facilityId);
+                if (fac) {
+                    document.getElementById('booking-facility-select').value = fac.name;
+                }
+            }
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            closeBookingModal();
+            showNotificationToast('Permohonan pinjam tempat berhasil dikirim ke pengurus desa!');
+            document.getElementById('booking-form').reset();
+        }
+
+        // CHAT RENDER & LOGIC
+        function renderChatChannels() {
+            const container = document.getElementById('chat-channels-list');
+            container.innerHTML = '';
+
+            state.chatChannels.forEach(ch => {
+                const isActive = ch.id === state.activeChannelId;
+                const activeClass = isActive 
+                    ? 'bg-brand-50 border-brand-500 font-bold text-brand-800' 
+                    : 'hover:bg-slate-100 text-slate-600';
+
+                container.innerHTML += `
+                    <button onclick="switchChannel('${ch.id}')" class="w-full text-left p-3 rounded-xl border-l-4 transition flex items-center space-x-3 ${activeClass}">
+                        <div class="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center text-slate-700 text-xs">
+                            <i class="fa-solid ${ch.icon}"></i>
+                        </div>
+                        <div class="overflow-hidden flex-1">
+                            <p class="text-xs truncate">${ch.name}</p>
+                            <p class="text-[10px] text-slate-400 font-normal">${ch.members} Anggota</p>
+                        </div>
+                    </button>
+                `;
+            });
+        }
+
+        function switchChannel(channelId) {
+            state.activeChannelId = channelId;
+            const channel = state.chatChannels.find(c => c.id === channelId);
+
+            document.getElementById('chat-active-title').innerText = channel.name;
+            document.getElementById('chat-active-members').innerText = `${channel.members} Anggota Terhubung`;
+
+            renderChatChannels();
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages-container');
+            container.innerHTML = '';
+
+            const activeMsgs = state.messages[state.activeChannelId] || [];
+
+            activeMsgs.forEach(m => {
+                const isMe = m.sender === 'Anda';
+                
+                if (isMe) {
+                    container.innerHTML += `
+                        <div class="flex flex-col items-end">
+                            <div class="chat-bubble-user p-3 max-w-xs text-xs shadow-sm">
+                                <p class="font-bold text-[10px] opacity-90 mb-0.5">Anda</p>
+                                <p>${m.text}</p>
+                            </div>
+                            <span class="text-[9px] text-slate-400 mt-1">${m.time}</span>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML += `
+                        <div class="flex flex-col items-start">
+                            <div class="chat-bubble-other p-3 max-w-xs text-xs shadow-sm border border-slate-200/60">
+                                <p class="font-bold text-[10px] text-brand-700 mb-0.5">${m.sender}</p>
+                                <p>${m.text}</p>
+                            </div>
+                            <span class="text-[9px] text-slate-400 mt-1">${m.time}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            if (!state.messages[state.activeChannelId]) {
+                state.messages[state.activeChannelId] = [];
+            }
+
+            state.messages[state.activeChannelId].push({
+                sender: 'Anda',
+                text: text,
+                time: timeStr
+            });
+
+            input.value = '';
+            renderChatMessages();
+        }
+
+        // RENDER EVENTS
+        function renderEvents() {
+            const container = document.getElementById('events-container');
+            container.innerHTML = '';
+
+            state.events.forEach(ev => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="bg-brand-50 text-brand-700 text-xs font-bold px-3 py-1 rounded-md inline-block mb-3">
+                                <i class="fa-regular fa-calendar mr-1"></i> ${ev.date}
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-2">${ev.title}</h4>
+                            <p class="text-xs text-slate-500 mb-1"><i class="fa-regular fa-clock mr-1"></i> ${ev.time}</p>
+                            <p class="text-xs text-slate-500 mb-4"><i class="fa-solid fa-location-dot mr-1 text-red-500"></i> ${ev.location}</p>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] text-slate-500 font-medium">${ev.registered} Warga Mendaftar</span>
+                            <button onclick="registerEvent('${ev.title}')" class="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition">
+                                Daftar Event
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function registerEvent(title) {
+            showNotificationToast(`Berhasil mendaftar pada acara: ${title}`);
+        }
+
+        // TOAST NOTIFICATION HELPER
+        function showNotificationToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').innerText = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
